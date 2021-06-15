@@ -4,6 +4,7 @@ using PwiAPI.Models;
 using PwiAPI.Repositories;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -20,8 +21,8 @@ namespace PwiAPI.Services
 
         public User GetCurrentUser(string token)
         {
-            string email = JwtTokenHelper.ExtractDataFromToken(token, ClaimTypes.Email);
-            var userFromRepo = _userRepository.GetUserByEmail(email);
+            string id = JwtTokenHelper.ExtractDataFromToken(token, ClaimTypes.NameIdentifier);
+            var userFromRepo = _userRepository.GetUserById(int.Parse(id));
 
             return userFromRepo;
         }
@@ -38,11 +39,6 @@ namespace PwiAPI.Services
 
         private User ValidateUser(string emailAddress, string password)
         {
-            if (!IsEmailValid(emailAddress) || !IsPasswordValid(password))
-            {
-                return null;
-            }
-
             User userFromContext;
             try
             {
@@ -66,12 +62,8 @@ namespace PwiAPI.Services
 
         public bool Register(string email, string password)
         {
-            if (!IsEmailValid(email) || !IsPasswordValid(password))
-            {
-                return false;
-            }
-
             var hashedPassword = PasswordHashHelper.HashPassword(password);
+
             var newUser = new User()
             {
                 Email = email.ToLower(),
@@ -81,19 +73,6 @@ namespace PwiAPI.Services
 
             _userRepository.Add(newUser);
             return true;
-        }
-
-        private bool IsEmailValid(string emailAddress)
-        {
-            var regex = new Regex(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", RegexOptions.Compiled);
-            return regex.IsMatch(emailAddress);
-        }
-
-        private bool IsPasswordValid(string emailAddress)
-        {
-            //At least 8 characters, one letter, one number, one special character
-            var regex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$", RegexOptions.Compiled);
-            return regex.IsMatch(emailAddress);
         }
     }
 

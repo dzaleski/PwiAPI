@@ -5,6 +5,6 @@ namespace PwiAPI.Models
     public class EntityBase
     {
         [Key]
-        public long Id { get; set; }
+        public int Id { get; set; }
     }
 }

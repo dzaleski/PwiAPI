@@ -18,7 +18,11 @@ namespace PwiAPI.Controllers
         {
             var userFromSerivce = _usersService.GetCurrentUser(token);
             
-            return Ok(new CurrentUserDTO() { Email = userFromSerivce.Email });
+            return Ok(new CurrentUserDTO() { 
+                Id = userFromSerivce.Id,
+                Email = userFromSerivce.Email,
+                AccountBalance = userFromSerivce.AccountBalance
+            });
         }
     }
 }

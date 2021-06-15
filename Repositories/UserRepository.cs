@@ -19,6 +19,11 @@ namespace PwiAPI.Repositories
             return _context.Users.ToList();
         }
 
+        public User GetUserById(int id)
+        {
+            return _context.Users.FirstOrDefault(user => user.Id == id);
+        }
+
         public User GetUserByEmail(string emailAddress)
         {
             return _context.Users.FirstOrDefault(user => user.Email == emailAddress);

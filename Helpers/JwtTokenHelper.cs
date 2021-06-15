@@ -16,7 +16,7 @@ namespace PwiAPI.Helpers
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new List<Claim> { new Claim(ClaimTypes.Email, userInfo.Email) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString()) };
 
             var token = new JwtSecurityToken(config["Jwt:Issuer"],
               config["Jwt:Issuer"],

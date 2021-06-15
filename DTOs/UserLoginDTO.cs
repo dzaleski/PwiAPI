@@ -1,4 +1,6 @@
-﻿namespace PwiAPI.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PwiAPI.DTOs
 {
     public class UserLoginDTO
     {
