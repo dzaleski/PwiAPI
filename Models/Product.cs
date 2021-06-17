@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PwiAPI.Models
 {
@@ -17,6 +18,10 @@ namespace PwiAPI.Models
         public string ImageURL { get; set; }
 
         [Required]
-        public Category Category { get; set; }
+        public int Price { get; set; }
+
+        [Required]
+        public virtual Category Category { get; set; }
+        public virtual  IEnumerable<Order> Orders { get; set; }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PwiAPI.DTOs;
 using PwiAPI.Helpers;
+using PwiAPI.Models;
 using PwiAPI.Services;
+using System.Data.Common;
 
 namespace PwiAPI.Controllers
 {
@@ -20,14 +23,14 @@ namespace PwiAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/Login")]
+        [Route("api/login")]
         public IActionResult Login([FromBody] UserLoginDTO userLoginDto)
         {
             var validatedUser = _usersService.Login(userLoginDto.Email, userLoginDto.Password);
 
             if (validatedUser == null)
             {
-                return Unauthorized();
+                return BadRequest(new ErrorResponse("Wrong email or password"));
             }
 
             var tokenString = JwtTokenHelper.GenerateJSONWebToken(validatedUser, _config);
@@ -37,14 +40,16 @@ namespace PwiAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/Register")]
+        [Route("api/register")]
         public IActionResult Register([FromBody] UserRegisterDTO userRegisterDto)
         {
-            bool registered = _usersService.Register(userRegisterDto.Email, userRegisterDto.Password);
-
-            if (!registered)
+            try
             {
-                return Unauthorized("Wrong email or password!");
+                _usersService.Register(userRegisterDto.Email, userRegisterDto.Password);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(new ErrorResponse("Email is already used!"));
             }
 
             return Ok("Succesfully registered!");

@@ -30,7 +30,7 @@ namespace PwiAPI.Repositories
         }
 
         public void Add(User newUser)
-        {
+        { 
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }

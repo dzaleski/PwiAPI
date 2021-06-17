@@ -14,15 +14,16 @@ namespace PwiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCurrentUser(string token)
+        public IActionResult GetCurrentUser([FromHeader] object data)
         {
-            var userFromSerivce = _usersService.GetCurrentUser(token);
+            return Ok();
+            //var userFromSerivce = _usersService.GetCurrentUser(token);
             
-            return Ok(new CurrentUserDTO() { 
-                Id = userFromSerivce.Id,
-                Email = userFromSerivce.Email,
-                AccountBalance = userFromSerivce.AccountBalance
-            });
+            //return Ok(new CurrentUserDTO() { 
+            //    Id = userFromSerivce.Id,
+            //    Email = userFromSerivce.Email,
+            //    AccountBalance = userFromSerivce.AccountBalance
+            //});
         }
     }
 }

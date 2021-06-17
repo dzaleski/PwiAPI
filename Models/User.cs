@@ -18,7 +18,7 @@ namespace PwiAPI.Models
         [Required]
         public float AccountBalance { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; }
+        public virtual IEnumerable<Order> Orders { get; set; }
 
     }
 }

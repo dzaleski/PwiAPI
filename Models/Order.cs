@@ -4,6 +4,6 @@ namespace PwiAPI.Models
 {
     public class Order : EntityBase
     {
-        public IEnumerable<Product> Products { get; set; }
+        public virtual IEnumerable<Product> Products { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using PwiAPI.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -39,14 +40,11 @@ namespace PwiAPI.Services
 
         private User ValidateUser(string emailAddress, string password)
         {
-            User userFromContext;
-            try
+            User userFromContext = _userRepository.GetUserByEmail(emailAddress.ToLower());
+
+            if (userFromContext == null)
             {
-                userFromContext = _userRepository.GetUserByEmail(emailAddress.ToLower());
-            }
-            catch (InvalidOperationException)
-            {
-                throw;
+                return null;
             }
 
             var result = PasswordHashHelper.VerifyHashedPassword(userFromContext.Password, password);
@@ -60,7 +58,7 @@ namespace PwiAPI.Services
         }
 
 
-        public bool Register(string email, string password)
+        public void Register(string email, string password)
         {
             var hashedPassword = PasswordHashHelper.HashPassword(password);
 
@@ -72,7 +70,6 @@ namespace PwiAPI.Services
             };
 
             _userRepository.Add(newUser);
-            return true;
         }
     }
 

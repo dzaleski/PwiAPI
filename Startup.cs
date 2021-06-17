@@ -1,23 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PwiAPI.Data;
 using PwiAPI.Repositories;
 using PwiAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PwiAPI
 {
@@ -40,8 +33,9 @@ namespace PwiAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PwiAPI", Version = "v1" });
             });
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
             services.AddScoped<UserRepository>();
+            services.AddScoped<ProductsRepository>();
             services.AddScoped<UsersService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
