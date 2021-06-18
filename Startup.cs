@@ -36,6 +36,7 @@ namespace PwiAPI
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
             services.AddScoped<UserRepository>();
             services.AddScoped<ProductsRepository>();
+            services.AddScoped<CategoriesRepository>();
             services.AddScoped<UsersService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
