@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PwiAPI.DTOs;
 using PwiAPI.Services;
+using System.Net;
 
 namespace PwiAPI.Controllers
 {
@@ -14,20 +15,15 @@ namespace PwiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCurrentUser(string token)
+        public IActionResult GetCurrentUser([FromHeader] HeaderDTO header)
         {
-            if (token == "" || token == null)
-            {
-                return BadRequest("Empty token");
-            }
-
-            var userFromSerivce = _usersService.GetCurrentUser(token);
+            var userFromService = _usersService.GetUserFromHeader(header);
 
             return Ok(new CurrentUserDTO()
             {
-                Id = userFromSerivce.Id,
-                Email = userFromSerivce.Email,
-                AccountBalance = userFromSerivce.AccountBalance
+                Id = userFromService.Id,
+                Email = userFromService.Email,
+                AccountBalance = userFromService.AccountBalance
             });
         }
     }

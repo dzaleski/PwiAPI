@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PwiAPI.DTOs
 {
-    public class OrderDTO
+    public class OrderAddDTO
     {
-        public int Id { get; set; }
-
         [Required]
         public string FirstName { get; set; }
 
@@ -27,8 +24,6 @@ namespace PwiAPI.DTOs
         [Required]
         public string Country { get; set; }
 
-        public DateTime? OrderDate { get; set; }
-
-        public virtual IEnumerable<ProductDTO> Products { get; set; }
+        public IEnumerable<OrderProductDTO> products { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using PwiAPI.DTOs;
 using PwiAPI.Helpers;
 using PwiAPI.Models;
 using PwiAPI.Repositories;
@@ -36,6 +37,24 @@ namespace PwiAPI.Services
         public User Login(string email, string password)
         {
             return ValidateUser(email, password);
+        }
+
+        public User GetUserFromHeader(HeaderDTO header)
+        {
+            if (header == null)
+            {
+                return null;
+            }
+
+            string tokenString = header.Authorization.Split(' ')[1];
+
+            if (string.IsNullOrEmpty(tokenString))
+            {
+                return null;
+            }
+
+            var userFromToken = GetCurrentUser(tokenString);
+            return userFromToken;
         }
 
         private User ValidateUser(string emailAddress, string password)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PwiAPI.Models
 {
@@ -22,6 +21,5 @@ namespace PwiAPI.Models
 
         [Required]
         public virtual Category Category { get; set; }
-        public virtual  IEnumerable<Order> Orders { get; set; }
     }
 }

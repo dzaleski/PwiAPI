@@ -3,6 +3,6 @@
     public class UserDTO
     {
         public string Email { get; set; }
-        public int AccountBalance { get; set; }
+        public float AccountBalance { get; set; }
     }
 }
