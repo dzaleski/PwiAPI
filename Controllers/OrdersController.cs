@@ -18,11 +18,20 @@ namespace PwiAPI.Controllers
         }
 
         [Authorize]
+        [HttpGet("details")]
+        public IActionResult GetAllOrdersWithDetailsOfUser([FromHeader] HeaderDTO header)
+        {
+            var user = _usersService.GetUserFromHeader(header);
+            var orders = _ordersRepo.GetAllOrderOfUser(user);
+            return Ok(orders);
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllOrdersOfUser([FromHeader] HeaderDTO header)
         {
             var user = _usersService.GetUserFromHeader(header);
-            var orders = _ordersRepo.GetOrdersOfUser(user);
+            var orders = _ordersRepo.GetAllOrderOfUser(user);
             return Ok(orders);
         }
 

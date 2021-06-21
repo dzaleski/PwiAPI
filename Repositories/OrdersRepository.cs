@@ -2,7 +2,6 @@
 using PwiAPI.Data;
 using PwiAPI.DTOs;
 using PwiAPI.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +16,36 @@ namespace PwiAPI.Repositories
             _context = context;
         }
 
-        public List<OrdersReponseDTO> GetOrdersOfUser(User user)
+        public List<OrderShortResponseDTO> GetAllOrderOfUser(User user)
+        {
+            var orders = _context.Orders.Where(o => o.User.Id == user.Id).ToList();
+
+            var orderShortDto = new List<OrderShortResponseDTO>();
+
+            foreach (var order in orders)
+            {
+                var productDtos = GetProductsDto(order.Id);
+
+                float totalCost = 0;
+
+                foreach (var product in productDtos)
+                {
+                    totalCost += product.Quantity * product.Price;
+                }
+
+                orderShortDto.Add(new OrderShortResponseDTO()
+                {
+                    Id=order.Id,
+                    Customer = order.FirstName + ' ' + order.LastName,
+                    OrderDate = order.OrderDate.ToString(),
+                    TotalCost = totalCost
+                });
+            }
+
+            return orderShortDto;
+        }
+
+        public List<OrdersReponseDTO> GetOrdersWithDetailsOfUser(User user)
         {
             var orders = _context.Orders.Where(o => o.User.Id == user.Id).ToList();
 
