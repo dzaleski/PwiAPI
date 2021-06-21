@@ -45,33 +45,55 @@ namespace PwiAPI.Repositories
             return orderShortDto;
         }
 
-        public List<OrdersReponseDTO> GetOrdersWithDetailsOfUser(User user)
+        public OrderDetailsResponseDTO GetAllOrdersWithDetailsOfUser(User user, int id)
         {
-            var orders = _context.Orders.Where(o => o.User.Id == user.Id).ToList();
+            //var order = _context.Orders.Where(o => o.Id == id).Where(o => o.User.Id == user.Id).Single();
 
-            var ordersDto = new List<OrdersReponseDTO>();
+            List<ProductOrderDTO> productsDto = GetProductsDto(id);
 
-            foreach (var order in orders)
+            var reponseProducts = new List<ProductOrderResponseDTO>();
+
+            float totalOrderPrice = 0;
+
+            foreach (var product in productsDto)
             {
-                List<ProductOrderDTO> productsDto = GetProductsDto(order.Id);
-
-                var orderDto = new OrdersReponseDTO()
-                {
-                    Id = order.Id,
-                    Address = order.Address,
-                    City = order.City,
-                    Country = order.Country,
-                    FirstName = order.FirstName,
-                    LastName = order.LastName,
-                    OrderDate = order.OrderDate,
-                    ZipCode = order.ZipCode,
-                    Products = productsDto
-                };
-
-                ordersDto.Add(orderDto);
+                totalOrderPrice += product.Quantity * product.Price;
             }
 
-            return ordersDto;
+            foreach (var product in productsDto)
+            {
+                reponseProducts.Add(new ProductOrderResponseDTO() 
+                { 
+                    Category = product.Category,
+                    Description = product.Description,
+                    Id = product.Id,
+                    ImageURL = product.ImageURL,
+                    Name = product.Name,
+                    TotalPrice = product.Price * product.Quantity,
+                    Quantity = product.Quantity,
+                    TotalOrderPrice = totalOrderPrice
+                });
+            }
+
+            //var orderDto = new OrdersReponseDTO()
+            //{
+            //    Id = order.Id,
+            //    Address = order.Address,
+            //    City = order.City,
+            //    Country = order.Country,
+            //    FirstName = order.FirstName,
+            //    LastName = order.LastName,
+            //    OrderDate = order.OrderDate,
+            //    ZipCode = order.ZipCode,
+            //    Products = productsDto
+            //};
+
+            var response = new OrderDetailsResponseDTO() 
+            {
+                TotalOrderPrice =totalOrderPrice,
+                products = reponseProducts
+            };
+            return response;
         }
 
         private List<ProductOrderDTO> GetProductsDto(int orderId)
